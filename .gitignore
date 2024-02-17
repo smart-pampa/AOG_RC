@@ -415,3 +415,6 @@ fp-info-cache
 
 # Visual Micro stuff
 __vm/
+
+# APP
+RateControllerApp/
