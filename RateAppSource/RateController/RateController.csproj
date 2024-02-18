@@ -121,6 +121,11 @@
     <Compile Include="Classes\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Domain\Module.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\RateController.cs" />
+    <Compile Include="Domain\Section.cs" />
+    <Compile Include="Domain\Vehicle.cs" />
     <Compile Include="FormNumeric.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -542,6 +547,10 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BLL\" />
+    <Folder Include="MPP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
