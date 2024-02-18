@@ -365,10 +365,12 @@
     <EmbeddedResource Include="Lang.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.hu.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.pl.resx">
       <Generator>ResXFileCodeGenerator</Generator>

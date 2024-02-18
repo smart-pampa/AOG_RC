@@ -46,7 +46,7 @@ namespace RateController
         public PGN235 SectionsPGN;
         public SerialComm[] SER = new SerialComm[3];
         public Color SimColor = Color.FromArgb(255, 191, 0);
-        private SimType cSimMode = SimType.None;
+        private SimType cSimMode = SimType.VirtualNano;
         public PGN32618 SwitchBox;
         public clsTools Tls;
         public PGN228 VRdata;
