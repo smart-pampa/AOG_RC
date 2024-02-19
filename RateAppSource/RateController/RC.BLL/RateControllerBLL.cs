@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RateController.Domain;
+
+namespace RateController.BLL
+{
+    public class RateControllerBLL
+    {
+        Configuration Conf;
+        public RateControllerBLL() { }
+
+        public bool CheckProducts(AppRC RC) 
+        {
+            //foreach (Product Prod in RC.ProductList)
+            return false; 
+        }
+
+        public bool CheckPressure(AppRC RC) 
+        {
+            bool Result = false;
+            int Count = 0;
+            float Total = 0;
+            float Ave = 0;
+
+            foreach (Module Mod in RC.ModuleList)
+                foreach (Sensor Sen in Mod.SensorList)
+                    if (Sen.Pressure.UnitsVolts > 0)
+                    {
+                        Count++;
+                        Total += Sen.Pressure.getPressure();
+                    }
+
+            if (Count > 0) { Ave = Total / Count; }
+
+            // check average
+            foreach (Module Mod in RC.ModuleList)
+                foreach (Sensor Sen in Mod.SensorList)
+                    if (Sen.Pressure.UnitsVolts > 0)
+                    {
+                        // too low?
+                        if (Sen.Pressure.getPressure() < (Ave * Conf.OffPressureSetting / 100))
+                        {
+                            Result = true;
+                            break;
+                        }
+
+                        // too high?
+                        if (Sen.Pressure.getPressure() > (Ave * (1 + Conf.OffPressureSetting / 100)))
+                        {
+                            Result = true;
+                            break;
+                        }
+                    }
+            return Result;        
+        }
+
+
+    }
+}

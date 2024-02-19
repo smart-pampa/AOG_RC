@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RateController.Domain
 {
-    public class Module
+    public class Switch
     {
+        public int Id { get; set; }
+        public Switch() { }
     }
 }

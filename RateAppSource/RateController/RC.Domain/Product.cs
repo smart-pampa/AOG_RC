@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace RateController.Domain
 {
-    public enum ControlTypeEnum
-    { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
-
-    public class Product
+    public abstract class Product
     {
         public PGN32400 ArduinoModule;
         public byte CoverageUnits = 0;

@@ -121,11 +121,18 @@
     <Compile Include="Classes\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Domain\Module.cs" />
-    <Compile Include="Domain\Product.cs" />
-    <Compile Include="Domain\RateController.cs" />
-    <Compile Include="Domain\Section.cs" />
-    <Compile Include="Domain\Vehicle.cs" />
+    <Compile Include="RC.BLL\RateControllerBLL.cs" />
+    <Compile Include="RC.Services\Alarm.cs" />
+    <Compile Include="RC.Domain\Configuration.cs" />
+    <Compile Include="RC.Domain\Module.cs" />
+    <Compile Include="RC.Domain\Pressure.cs" />
+    <Compile Include="RC.Domain\Product.cs" />
+    <Compile Include="RC.Domain\AppRC.cs" />
+    <Compile Include="RC.Domain\Relay.cs" />
+    <Compile Include="RC.Domain\Section.cs" />
+    <Compile Include="RC.Domain\Sensor.cs" />
+    <Compile Include="RC.Domain\Switch.cs" />
+    <Compile Include="RC.Domain\Vehicle.cs" />
     <Compile Include="FormNumeric.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -291,6 +298,12 @@
     <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RC.UI\FormUIStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RC.UI\FormUIStart.Designer.cs">
+      <DependentUpon>FormUIStart.cs</DependentUpon>
+    </Compile>
     <Compile Include="RCRestore.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -400,6 +413,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RC.UI\FormUIStart.resx">
+      <DependentUpon>FormUIStart.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
@@ -549,8 +565,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="MPP\" />
+    <Folder Include="RC.MPP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

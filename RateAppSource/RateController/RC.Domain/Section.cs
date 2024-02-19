@@ -18,11 +18,10 @@ namespace RateController.Domain
         private bool cSwitchChanged = false;
         private Switch objSwitch;
  
-        public Section(int ID, Switch pSwitch)
+        public Section(int ID)
         {
             cID = ID;
             Name = "Sec" + ID.ToString();
-            objSwitch = pSwitch;
         }
 
         public bool Edited
@@ -68,28 +67,12 @@ namespace RateController.Domain
             set { cSwitchChanged = value; }
         }
 
-        public int SwitchID
+        public Switch Switch
         {
-            get { return cSwitchID; }
+            get { return objSwitch; }
             set
             {
-                //TODO: MAX SWITCHES
-                if (1 == 1)
-                //if (value >= 0 && value < mf.MaxSwitches)
-                {
-                    if (cSwitchID != value)
-                    {
-                        cSwitchID = value;
-                        cEdited = true;
-                        cSwitchChanged = true;
-                    }
-                }
-                else
-                {
-                    //Parametrizar MAX
-                    int MAX = 6;
-                    throw new ArgumentException("Must be between 0 and " + MAX);
-                }
+                objSwitch = value;
             }
         }
 
