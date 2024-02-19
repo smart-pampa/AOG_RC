@@ -1,8 +1,9 @@
 ﻿using System;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32700
+    public class PGN32700 : PGN
     {
         //PGN32700, module config from RC to modules
         //0     HeaderLo    188

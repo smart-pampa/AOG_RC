@@ -1,8 +1,9 @@
 ﻿using System;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN235
+    public class PGN235 : PGN
     {
         // section widths
         // 0    header Hi       128 0x80

@@ -28,21 +28,9 @@ namespace RateController
 
     public partial class FormStart : Form
     {
-        public PGN32401 AnalogData;
-        public PGN254 AutoSteerPGN;
-        public PGN238 MachineConfig;
-        public PGN239 MachineData;
-        public PGN32700 ModuleConfig;
-        public PGN235 SectionsPGN;
-        public PGN32618 SwitchBox;
-        public PGN228 VRdata;
-        private PGN32501[] RelaySettings;
+
 
         public clsTools Tls;
-
-   
-       
-        public clsAlarm RCalarm;
         public clsSectionControl SectionControl;
         public clsVirtualSwitchBox vSwitchBox;
        // public clsZones Zones;
@@ -98,19 +86,10 @@ namespace RateController
 
             Tls = new clsTools(this);
 
-            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 
-            UDPaog = new UDPComm(this, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480, "UDPmodules");                   // arduino
 
-            AutoSteerPGN = new PGN254(this);
-            SectionsPGN = new PGN235(this);
-            MachineConfig = new PGN238(this);
-            MachineData = new PGN239(this);
-            VRdata = new PGN228(this);
 
-            SwitchBox = new PGN32618(this);
-            AnalogData = new PGN32401(this);
+
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);

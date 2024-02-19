@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using RateController.RC.Services;
+using RateController.Services;
 
 namespace RateController.Domain
 {
@@ -84,17 +87,6 @@ namespace RateController.Domain
                     throw new ArgumentException("Must be between 0 and 1000.");
                 }
             }
-        }
-
-        public float getPressure()
-        {
-            //float Result = mf.AnalogData.Reading((byte)cModuleID, (byte)ID) - cOffset;
-            float Result = 10;
-            if (cUnitsVolts > 0)
-            {
-                Result = Result / cUnitsVolts;
-            }
-            return Result;
         }
     }
 }

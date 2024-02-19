@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32400
+    public class PGN32400 : PGN
     {
         //PGN32400, Rate info from module to RC
         //0     HeaderLo    144

@@ -1,6 +1,8 @@
-﻿namespace RateController
+﻿using RateController.PGNs;
+
+namespace RateController
 {
-    public class PGN228
+    public class PGN228 : PGN
     {
         // VR Data
         // 0    header Hi       128 0x80
@@ -20,12 +22,10 @@
 
         private const byte cChannelCount = 8;
         private const byte HeaderCount = 5;
-        private readonly FormStart mf;
         private double[] Channels;
 
-        public PGN228(FormStart CalledFrom)
+        public PGN228()
         {
-            mf = CalledFrom;
             Channels = new double[cChannelCount];
         }
 
@@ -38,7 +38,7 @@
             {
                 if (Data.Length == Data[4] + HeaderCount + 1)
                 {
-                    if (mf.Tls.GoodCRC(Data, 2))
+                    if (GoodCRC(Data, 2))
                     {
                         for (int i = 0; i < cChannelCount; i++)
                         {

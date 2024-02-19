@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN254
+    public class PGN254 : PGN
     {
         // AutoSteer Data
         // 0    header Hi       128 0x80

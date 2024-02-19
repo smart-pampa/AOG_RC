@@ -1,8 +1,9 @@
 ﻿using System;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32502
+    public class PGN32502 : PGN
     {
         // PGN32502, PID from RC to module
         // 0    246

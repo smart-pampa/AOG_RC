@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using RateController.Services;
 
 namespace RateController.Domain
 {
@@ -17,8 +14,7 @@ namespace RateController.Domain
         Vehicle objVehicle;
 
         public SerialComm[] SER;
-        public UDPComm UDPmodules;
-        public UDPComm UDPaog;
+        public MessengerService MessengerService; 
 
         public AppRC() 
         { 
@@ -26,6 +22,7 @@ namespace RateController.Domain
             FanList = new List<Fan>();
             ModuleList = new List<Module>();
             objVehicle = new Vehicle();
+            MessengerService = new MessengerService();
 
             SER = new SerialComm[3];
         }

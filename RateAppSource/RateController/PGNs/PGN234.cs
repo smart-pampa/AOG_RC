@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿using RateController.PGNs;
+using System.Xml.Linq;
 
 namespace RateController
 {
-    public class PGN234
+    public class PGN234 : PGN
     {
         // to AOG from Rate Controller
         // 0    HeaderHi    128
@@ -26,17 +26,14 @@ namespace RateController
         // 12   swOffGr1        ss 8
         // 13   CRC
 
-        private byte[] cData = new byte[14];
-        private FormStart mf;
-
-        public PGN234(FormStart CalledFrom)
+        public PGN234()
         {
-            mf = CalledFrom;
-
+            cData = new byte[14];
             cData[0] = 128;
             cData[1] = 129;
             cData[3] = 234;
             cData[4] = 8;
+            cData[13] = CRC(cData, cData.Length - 1, 2);
         }
 
         public byte Command
@@ -50,11 +47,5 @@ namespace RateController
         { get { return cData[11]; } set { cData[11] = value; } }
         public byte OnLo
         { get { return cData[9]; } set { cData[9] = value; } }
-
-        public void Send()
-        {
-            cData[13] = mf.Tls.CRC(cData, cData.Length - 1, 2);
-            mf.UDPaog.SendUDPMessage(cData);
-        }
     }
 }

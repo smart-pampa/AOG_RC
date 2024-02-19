@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32501
+    public class PGN32501 : PGN
     {
         //PGN32501, Relay settings from RC to module
         //0	    HeaderLo		    245

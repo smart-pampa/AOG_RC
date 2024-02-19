@@ -31,7 +31,7 @@ namespace RateController.BLL
                     if (Sen.Pressure.UnitsVolts > 0)
                     {
                         Count++;
-                        Total += Sen.Pressure.getPressure();
+                        Total += Sen.getPressure();
                     }
 
             if (Count > 0) { Ave = Total / Count; }
@@ -42,14 +42,14 @@ namespace RateController.BLL
                     if (Sen.Pressure.UnitsVolts > 0)
                     {
                         // too low?
-                        if (Sen.Pressure.getPressure() < (Ave * Conf.OffPressureSetting / 100))
+                        if (Sen.getPressure() < (Ave * Conf.OffPressureSetting / 100))
                         {
                             Result = true;
                             break;
                         }
 
                         // too high?
-                        if (Sen.Pressure.getPressure() > (Ave * (1 + Conf.OffPressureSetting / 100)))
+                        if (Sen.getPressure() > (Ave * (1 + Conf.OffPressureSetting / 100)))
                         {
                             Result = true;
                             break;

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN238
+    public class PGN238 : PGN
     {
         // Machine config
         // 0    header Hi       128

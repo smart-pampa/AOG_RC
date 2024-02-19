@@ -2,10 +2,11 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32503
+    public class PGN32503 : PGN
     {
         //PGN32503, Subnet change
         //0     HeaderLo    247

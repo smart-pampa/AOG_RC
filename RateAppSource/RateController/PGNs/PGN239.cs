@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static RateController.PGN254;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN239
+    public class PGN239 : PGN
     {
         // Machine Data
         // 0    header Hi       128

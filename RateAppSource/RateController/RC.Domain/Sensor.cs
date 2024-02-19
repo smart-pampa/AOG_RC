@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RateController.Services;
 
 namespace RateController.Domain
 {
@@ -10,6 +6,24 @@ namespace RateController.Domain
     {
         public int ID;
         public Pressure Pressure { get; set; }
-        public Sensor(int pID) { ID = pID; }
+        public Module Module { get; set; }
+        public Sensor(int pID, Module pMod) 
+        { 
+            ID = pID; 
+            Module = pMod;
+        }
+
+        public float getPressure( )
+        {
+            MessengerService MesServ = new MessengerService();
+
+            float Result = MesServ.AnalogData.Reading((byte)Module.Id, (byte)ID) - Pressure.Offset;
+
+            if (Pressure.UnitsVolts > 0)
+            {
+                Result = Result / Pressure.UnitsVolts;
+            }
+            return Result;
+        }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using RateController.PGNs;
 
 namespace RateController
 {
-    public class PGN32401
+    public class PGN32401 : PGN
     { 
         //PGN32401, module, analog info from module to RC
         //0     145

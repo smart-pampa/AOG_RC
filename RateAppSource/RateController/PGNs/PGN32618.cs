@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
+using RateController.PGNs;
 
 namespace RateController
 {
     public enum SwIDs
     { Auto, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15 };
 
-    public class PGN32618
+    public class PGN32618 : PGN
     {
         // to Rate Controller from arduino switch box
         // 0   106
