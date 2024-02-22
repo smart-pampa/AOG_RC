@@ -25,14 +25,12 @@ namespace RateController
         private const byte cByteCount = 15;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
-        private readonly FormStart mf;
         private UInt16 cInoID;
         private byte cModuleID;
         private UInt16[,] cReading = new UInt16[255, 4];
 
-        public PGN32401(FormStart CalledFrom)
+        public PGN32401()
         {
-            mf = CalledFrom;
         }
 
         public UInt16 InoID
@@ -44,7 +42,7 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && GoodCRC(Data))
             {
                 cModuleID = Data[2];
                 for (int i = 0; i < 4; i++)
@@ -52,8 +50,6 @@ namespace RateController
                     cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
                 cInoID = (ushort)(Data[11] | Data[12] << 8);
-
-                mf.UpdateModuleConnected(cModuleID);
 
                 Result = true;
             }

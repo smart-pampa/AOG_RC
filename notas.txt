@@ -1,0 +1,26 @@
+ En la funcion de msg PGN32401
+ public bool ParseByteData(byte[] Data)
+ ...
+   mf.UpdateModuleConnected(cModuleID);
+ 
+ --> esta funcion deberia ir cuando se lee el mensaje
+ 
+ PGN238
+ funciones:
+ 
+ 
+        private void Load()
+        {
+            byte.TryParse(mf.Tls.LoadProperty("RaiseTime"), out cRaiseTime);
+            byte.TryParse(mf.Tls.LoadProperty("LowerTime"), out cLowerTime);
+            bool.TryParse(mf.Tls.LoadProperty("HydEnable"), out cHydEnable);
+            byte.TryParse(mf.Tls.LoadProperty("HydSettings"), out cSet0);
+        }
+
+        private void Save()
+        {
+            mf.Tls.SaveProperty("RaiseTime", cRaiseTime.ToString());
+            mf.Tls.SaveProperty("LowerTime", cLowerTime.ToString());
+            mf.Tls.SaveProperty("HydEnable", cHydEnable.ToString());
+            mf.Tls.SaveProperty("HydSettings", cSet0.ToString());
+        }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using RateController.Domain;
 using RateController.PGNs;
 
 namespace RateController
@@ -17,11 +19,9 @@ namespace RateController
 
         private byte cSectionCount;
         private readonly int[] cWidth_cm = new int[16];
-        private readonly FormStart mf;
 
-        public PGN235(FormStart CalledFrom)
+        public PGN235()
         {
-            mf = CalledFrom;
         }
 
         public event EventHandler SectionsChanged;
@@ -34,7 +34,7 @@ namespace RateController
             {
                 if (Data.Length == Data[4] + 6)
                 {
-                    if (mf.Tls.GoodCRC(Data, 2))
+                    if (GoodCRC(Data, 2))
                     {
                         cSectionCount = Data[37];
                         if (cSectionCount > 0 && cSectionCount < 17)
@@ -69,10 +69,10 @@ namespace RateController
             return cWidth_cm[SectionID];
         }
 
-        private bool Changed()
+        private bool Changed(List<Section> lstSections)
         {
             bool Result = false;
-            if (mf.Sections.Count != cSectionCount)
+            if (lstSections.Count != cSectionCount)
             {
                 Result = true;
             }
@@ -80,7 +80,7 @@ namespace RateController
             {
                 for (int i = 0; i < cSectionCount; i++)
                 {
-                    if (cWidth_cm[i] != mf.Sections.Items[i].Width_cm)
+                    if (cWidth_cm[i] != lstSections[i].Width_cm)
                     {
                         Result = true;
                         break;

@@ -23,7 +23,6 @@ namespace RateController
         private const byte cByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
-        private readonly FormStart mf;
         private bool cAutoOn = true;
         private bool cMasterOn = false;
         private bool cRateDown = false;
@@ -31,9 +30,8 @@ namespace RateController
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
 
-        public PGN32618(FormStart CalledFrom)
+        public PGN32618()
         {
-            mf = CalledFrom;
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
         }
 
@@ -75,22 +73,22 @@ namespace RateController
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && GoodCRC(Data))
             {
                 // auto
-                SW[0] = mf.Tls.BitRead(Data[2], 0);
+                SW[0] = BitRead(Data[2], 0);
                 cAutoOn = SW[0];
 
                 // master
-                SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
-                SW[2] = mf.Tls.BitRead(Data[2], 2);     // master off
+                SW[1] = BitRead(Data[2], 1);     // master on
+                SW[2] = BitRead(Data[2], 2);     // master off
 
                 if (SW[1]) cMasterOn = true;
                 else if (SW[2]) cMasterOn = false;
 
                 // rate
-                SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
-                SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
+                SW[3] = BitRead(Data[2], 3);     // rate up
+                SW[4] = BitRead(Data[2], 4);     // rate down
 
                 if (SW[3])
                 {
@@ -113,7 +111,7 @@ namespace RateController
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
+                        SW[5 + j + i * 8] = BitRead(Data[i + 3], j);
                     }
                 }
 

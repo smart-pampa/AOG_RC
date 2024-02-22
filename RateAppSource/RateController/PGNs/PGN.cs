@@ -37,5 +37,11 @@ namespace RateController.PGNs
             return Result;
         }
 
+        public bool BitRead(byte b, int pos)
+        {
+            return ((b >> pos) & 1) != 0;
+        }
+
+
     }
 }

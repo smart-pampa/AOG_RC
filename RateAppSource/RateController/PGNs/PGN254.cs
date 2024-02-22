@@ -28,7 +28,6 @@ namespace RateController
         private float KalP = 1.0F;
         private float KalPc = 0.0F;
         private float KalResult = 0.0F;
-        private readonly FormStart mf;
 
         private readonly float KalVariance = 0.01F;   // larger is more filtering
         private readonly float KalProcess = 0.005F;  // smaller is more filtering
@@ -38,9 +37,8 @@ namespace RateController
         private byte RelayLoLast;
         private int totalHeaderByteCount = 5;
 
-        public PGN254(FormStart CalledFrom)
+        public PGN254()
         {
-            mf = CalledFrom;
         }
 
         public event EventHandler<RelaysChangedArgs> RelaysChanged;
@@ -62,7 +60,7 @@ namespace RateController
             {
                 if (Data.Length == Data[4] + totalHeaderByteCount + 1)
                 {
-                    if (mf.Tls.GoodCRC(Data, 2))
+                    if (GoodCRC(Data, 2))
                     {
                         cSpeed = (float)((Data[6] << 8 | Data[5]) / 10.0);
 

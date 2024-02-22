@@ -22,24 +22,22 @@ namespace RateController
         // 12   User4
         // 13   CRC
 
-        private readonly FormStart mf;
         private bool cHydEnable;
         private byte cLowerTime;
         private byte cRaiseTime;
         private byte cSet0;
         private int totalHeaderByteCount = 5;
 
-        public PGN238(FormStart CalledFrom)
+        public PGN238()
         {
-            mf = CalledFrom;
-            Load();
+            //Load();
         }
 
         public bool ActiveHigh
-        { get { return !mf.Tls.BitRead(cSet0, 0); } }
+        { get { return !BitRead(cSet0, 0); } }
 
         public bool HydEnable
-        { get { return mf.Tls.BitRead(cSet0, 1); } }
+        { get { return BitRead(cSet0, 1); } }
 
         public byte LowerTime
         { get { return cLowerTime; } }
@@ -59,26 +57,12 @@ namespace RateController
                         cLowerTime = Data[6];
                         cHydEnable = (Data[7] > 0);
                         cSet0 = Data[8];
-                        Save();
+                        
+                        //Save();
                     }
                 }
             }
         }
 
-        private void Load()
-        {
-            byte.TryParse(mf.Tls.LoadProperty("RaiseTime"), out cRaiseTime);
-            byte.TryParse(mf.Tls.LoadProperty("LowerTime"), out cLowerTime);
-            bool.TryParse(mf.Tls.LoadProperty("HydEnable"), out cHydEnable);
-            byte.TryParse(mf.Tls.LoadProperty("HydSettings"), out cSet0);
-        }
-
-        private void Save()
-        {
-            mf.Tls.SaveProperty("RaiseTime", cRaiseTime.ToString());
-            mf.Tls.SaveProperty("LowerTime", cLowerTime.ToString());
-            mf.Tls.SaveProperty("HydEnable", cHydEnable.ToString());
-            mf.Tls.SaveProperty("HydSettings", cSet0.ToString());
-        }
     }
 }

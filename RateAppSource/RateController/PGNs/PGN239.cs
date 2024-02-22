@@ -25,16 +25,14 @@ namespace RateController
         // 12   Relay Hi
         // 13   CRC
 
-        private readonly FormStart mf;
         private byte cGeoStop;
         private byte cHydLift;
         private byte cTram;
         private DateTime ReceiveTime;
         private int totalHeaderByteCount = 5;
 
-        public PGN239(FormStart CalledFrom)
+        public PGN239()
         {
-            mf = CalledFrom;
         }
 
         public bool GeoStop
@@ -59,7 +57,7 @@ namespace RateController
         {
             get 
             {
-                return mf.Tls.BitRead(cTram, 1) && Connected();
+                return BitRead(cTram, 1) && Connected();
             }
         }
 
@@ -67,7 +65,7 @@ namespace RateController
         {
             get
             {
-                return mf.Tls.BitRead(cTram, 0) && Connected();
+                return BitRead(cTram, 0) && Connected();
             }
         }
 
@@ -82,7 +80,7 @@ namespace RateController
             {
                 if (Data.Length == Data[4] + totalHeaderByteCount + 1)
                 {
-                    if (mf.Tls.GoodCRC(Data, 2))
+                    if (GoodCRC(Data, 2))
                     {
                         cHydLift = Data[7];
                         cTram = Data[8];
