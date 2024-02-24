@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RateController.Services;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace RateController.Domain
 {
@@ -14,7 +16,7 @@ namespace RateController.Domain
         Vehicle objVehicle;
 
         public SerialComm[] SER;
-        public MessengerService MessengerService; 
+        public MessengerService MessengerService;
 
         public AppRC() 
         { 
@@ -26,6 +28,5 @@ namespace RateController.Domain
 
             SER = new SerialComm[3];
         }
-
     }
 }

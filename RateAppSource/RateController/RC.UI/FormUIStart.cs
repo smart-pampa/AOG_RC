@@ -121,7 +121,7 @@ namespace RateController
 
             ModuleTime = new DateTime[MaxModules];
             Zones = new clsZones(this);
-            vSwitchBox = new clsVirtualSwitchBox(this);
+            
             ModuleConfig = new PGN32700(this);
         }
 

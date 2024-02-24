@@ -10,7 +10,6 @@ namespace RateController.BLL
 {
     public class RateControllerBLL
     {
-        Configuration Conf;
         public RateControllerBLL() { }
 
         public bool CheckProducts(AppRC RC) 
@@ -42,14 +41,14 @@ namespace RateController.BLL
                     if (Sen.Pressure.UnitsVolts > 0)
                     {
                         // too low?
-                        if (Sen.getPressure() < (Ave * Conf.OffPressureSetting / 100))
+                        if (Sen.getPressure() < (Ave * Configuration.OffPressureSetting / 100))
                         {
                             Result = true;
                             break;
                         }
 
                         // too high?
-                        if (Sen.getPressure() > (Ave * (1 + Conf.OffPressureSetting / 100)))
+                        if (Sen.getPressure() > (Ave * (1 + Configuration.OffPressureSetting / 100)))
                         {
                             Result = true;
                             break;

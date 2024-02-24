@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Services;
+using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Windows.Forms;
@@ -8,7 +9,6 @@ namespace RateController
     public class SerialComm
     {
         private readonly String ID;
-        private readonly FormStart mf;
         private SerialPort cArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
         private string cLog;
         private int cPortNumber;
@@ -21,9 +21,8 @@ namespace RateController
         // prevent UI lock-up by only sending serial data after verfying connection
         private bool SerialActive = false;
 
-        public SerialComm(FormStart CallingForm, int PortNumber)
+        public SerialComm(int PortNumber)
         {
-            mf = CallingForm;
             cPortNumber = PortNumber;
             RCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
@@ -54,17 +53,17 @@ namespace RateController
                     }
                     catch (Exception e)
                     {
-                        mf.Tls.ShowHelp("Could not close serial port. \n" + e.Message, "Comm", 3000, true);
+                        throw new Exception("Could not close serial port. \n \"Comm\", 3000, true" + e.Message);
                     }
 
-                    mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
+                    ManageFiles.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
 
                     ArduinoPort.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("SerialComm/CloseRCport: " + ex.Message);
+                throw new Exception("SerialComm/CloseRCport: " + ex.Message);
             }
         }
 
@@ -98,9 +97,9 @@ namespace RateController
                         }
                         catch (Exception e)
                         {
-                            if (!SuppressErrors) mf.Tls.ShowHelp("Could not open serial port. \n" + e.Message, "Comm", 3000, true);
+                            if (!SuppressErrors) throw new Exception("Could not open serial port. \n, \"Comm\", 3000, true" + e.Message);
 
-                            mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
+                            ManageFiles.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
                         }
                     }
 
@@ -109,21 +108,21 @@ namespace RateController
                         ArduinoPort.DiscardOutBuffer();
                         ArduinoPort.DiscardInBuffer();
 
-                        mf.Tls.SaveProperty("RCportName" + ID + cPortNumber.ToString(), RCportName);
-                        mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "true");
-                        mf.Tls.SaveProperty("RCportBaud" + ID + cPortNumber.ToString(), RCportBaud.ToString());
+                        ManageFiles.SaveProperty("RCportName" + ID + cPortNumber.ToString(), RCportName);
+                        ManageFiles.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "true");
+                        ManageFiles.SaveProperty("RCportBaud" + ID + cPortNumber.ToString(), RCportBaud.ToString());
                     }
                 }
                 else
                 {
-                    if (!SuppressErrors) mf.Tls.ShowHelp("Could not open serial port.", "Comm", 3000, true);
+                    if (!SuppressErrors) throw new Exception("Could not open serial port., \"Comm\", 3000, true");
 
-                    mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
+                    ManageFiles.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("SerialComm/OpenRCport: " + ex.Message);
+                throw new Exception("SerialComm/OpenRCport: " + ex.Message);
             }
         }
 
@@ -150,19 +149,9 @@ namespace RateController
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("SerialComm/SendData: " + ex.Message);
+                    throw new Exception("SerialComm/SendData: " + ex.Message);
                 }
             }
-        }
-
-        private void AddToLog(string NewData)
-        {
-            cLog += NewData + "\n";
-            if (cLog.Length > 100000)
-            {
-                cLog = cLog.Substring(cLog.Length - 98000, 98000);
-            }
-            cLog = cLog.Replace("\0", string.Empty);
         }
 
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -186,8 +175,6 @@ namespace RateController
         {
             try
             {
-                AddToLog(sentence);
-
                 int CommaPosition = sentence.IndexOf(",", StringComparison.Ordinal);
                 int CRposition = sentence.IndexOf("\r");
                 if (CommaPosition > -1 && CRposition > -1)
@@ -236,7 +223,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("SerialComm/ReceiveData: " + ex.Message);
+                throw new Exception("SerialComm/ReceiveData: " + ex.Message);
             }
         }
 

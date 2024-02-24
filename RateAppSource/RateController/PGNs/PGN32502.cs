@@ -1,4 +1,5 @@
 ﻿using System;
+using RateController.Domain;
 using RateController.PGNs;
 
 namespace RateController
@@ -38,7 +39,7 @@ namespace RateController
 
         private UInt32 Temp;
 
-        public PGN32502(clsProduct CalledFrom)
+        public PGN32502(Product CalledFrom)
         {
             Prod = CalledFrom;
 

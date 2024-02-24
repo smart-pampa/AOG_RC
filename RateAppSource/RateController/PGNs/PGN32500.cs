@@ -1,4 +1,5 @@
 ﻿using System;
+using RateController.Domain;
 using RateController.PGNs;
 
 namespace RateController
@@ -32,7 +33,7 @@ namespace RateController
         private DateTime cSendTime;
         private clsProduct Prod;
 
-        public PGN32500(clsProduct CalledFrom)
+        public PGN32500(Product CalledFrom)
         {
             Prod = CalledFrom;
         }

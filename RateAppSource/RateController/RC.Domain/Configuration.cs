@@ -13,19 +13,21 @@ namespace RateController.Domain
     public enum SimType
     { None, VirtualNano, Speed }
 
-    public class Configuration
+    public static class Configuration
     {
-        public readonly int MaxModules = 8;
-        public readonly int MaxProducts = 6;
-        public readonly int MaxRelays = 16;
-        public readonly int MaxSections = 128;
-        public readonly int MaxSensors = 8; // last two are fans
-        public readonly int MaxSwitches = 16;
+        public static readonly int MaxModules = 8;
+        public static readonly int MaxProducts = 6;
+        public static readonly int MaxRelays = 16;
+        public static readonly int MaxSections = 128;
+        public static readonly int MaxSensors = 8; // last two are fans
+        public static readonly int MaxSwitches = 16;
 
-        public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
-        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
-        private byte cOffAverageSetting;
-        public byte OffPressureSetting
+        public static SimType SimMode = SimType.VirtualNano;
+
+        public static string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
+        public static string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
+        private static byte cOffAverageSetting;
+        public static byte OffPressureSetting
         {
             get { return cOffAverageSetting; }
             set
@@ -42,15 +44,15 @@ namespace RateController.Domain
             }
         }
 
-        public bool cUseInches;
-        public bool Restart = false;
-        public string WiFiIP;
+        public static bool cUseInches;
+        public static bool Restart = false;
+        public static string WiFiIP;
 
-        private SimType cSimMode = SimType.VirtualNano;
-        public Color SimColor = Color.FromArgb(255, 191, 0);
+        private static SimType cSimMode = SimType.VirtualNano;
+        public static Color SimColor = Color.FromArgb(255, 191, 0);
 
 
-        public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
+        public static string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgNone};
 

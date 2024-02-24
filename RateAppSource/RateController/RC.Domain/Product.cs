@@ -40,7 +40,6 @@ namespace RateController.Domain
         private int cSenID;
         private int cSerialPort;
         private double cTankStart = 0;
-        private double cUnitsApplied = 0;
         private double CurrentMinutes;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
@@ -55,8 +54,9 @@ namespace RateController.Domain
         private DateTime LastUpdateTime;
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
-        private double UnitsOffset = 0;
         
+        public double UnitsOffset = 0;
+        public double UnitsApplied = 0;
 
         public Product(int ProdID)
         {
@@ -64,9 +64,9 @@ namespace RateController.Domain
             cModID = -1;  // default other than 0
             PauseWork = true;
 
-            //ArduinoModule = new PGN32400(this);
-            //ModuleRateSettings = new PGN32500(this);
-            //ModulePIDdata = new PGN32502(this);
+            ArduinoModule = new PGN32400(this);
+            ModuleRateSettings = new PGN32500(this);
+            ModulePIDdata = new PGN32502(this);
             cLogRate = false;
 
         }
@@ -418,27 +418,6 @@ namespace RateController.Domain
 
         private string IDname
         { get { return cProductID.ToString(); } }
-
-
-        public bool ChangeID(int ModID, int SenID)
-        {
-            bool Result = false;
-
-            //TODO: MAXMODULES y MAXSENSORS
-            //if (ModID > -1 && ModID < mf.MaxModules && SenID > -1 && SenID < mf.MaxSensors)
-            if (1==1)
-            {
-                if(1==1)
-                //if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
-                {
-                    cModID = ModID;
-                    cSenID = SenID;
-                    Result = true;
-                }
-            }
-            return Result;
-        }
-
     }
 
     public class ComboCloseTimed : Product

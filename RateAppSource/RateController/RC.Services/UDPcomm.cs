@@ -1,39 +1,35 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
-namespace RateController
+namespace RateController.Services
 {
+    public delegate void DataReceivedEventHandler(int Port, byte[] Data);
+
     public class UDPComm
     {
-        private readonly FormStart mf;
         private byte[] buffer = new byte[1024];
         private string cConnectionName;
         private bool cIsUDPSendConnected;
-        private string cLog;
         private IPAddress cNetworkEP;
         private int cReceivePort;   // local ports must be unique for each app on same pc and each class instance
         private int cSendFromPort;
         private int cSendToPort;
         private string cSubNet;
-        private HandleDataDelegateObj HandleDataDelegate = null;
         private Socket recvSocket;
-        private DateTime SBtime;
         private Socket sendSocket;
 
-        public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "")
+        public event DataReceivedEventHandler ProcessData;
+
+
+        public UDPComm(int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "")
         {
-            mf = CallingForm;
             cReceivePort = ReceivePort;
             cSendToPort = SendToPort;
             cSendFromPort = SendFromPort;
             cConnectionName = ConnectionName;
             SetEP(DestinationEndPoint);
         }
-
-        // Status delegate
-        private delegate void HandleDataDelegateObj(int port, byte[] msg);
 
         public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
 
@@ -47,7 +43,7 @@ namespace RateController
                 {
                     data = value.Split('.');
                     cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    mf.Tls.SaveProperty("EndPoint_" + cConnectionName, value);
+                    ManageFiles.SaveProperty("EndPoint_" + cConnectionName, value);
                     cSubNet = data[0].ToString() + "." + data[1].ToString() + "." + data[2].ToString();
                 }
             }
@@ -56,18 +52,11 @@ namespace RateController
         public string SubNet
         { get { return cSubNet; } }
 
-        public bool SwitchBoxConnected
-        { get { return ((DateTime.Now - SBtime).TotalSeconds < 4); } }
 
         public void Close()
         {
             recvSocket.Close();
             sendSocket.Close();
-        }
-
-        public string Log()
-        {
-            return cLog;
         }
 
         //sends byte array
@@ -77,9 +66,6 @@ namespace RateController
             {
                 try
                 {
-                    int PGN = byteData[0] | byteData[1] << 8;
-                    AddToLog("               > " + PGN.ToString());
-
                     if (byteData.Length != 0)
                     {
                         // network
@@ -89,7 +75,7 @@ namespace RateController
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("UDPcomm/SendUDPMessage " + ex.Message);
+                 throw new Exception("UDPcomm/SendUDPMessage " + ex.Message);
                 }
             }
         }
@@ -98,9 +84,6 @@ namespace RateController
         {
             try
             {
-                // initialize the delegate which updates the message received
-                HandleDataDelegate = HandleData;
-
                 // initialize the receive socket
                 recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
@@ -121,85 +104,7 @@ namespace RateController
             }
             catch (Exception e)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/StartUDPServer: \n" + e.Message);
-            }
-        }
-
-        private void AddToLog(string NewData)
-        {
-            cLog += DateTime.Now.Second.ToString() + "  " + NewData + Environment.NewLine;
-            if (cLog.Length > 100000)
-            {
-                cLog = cLog.Substring(cLog.Length - 98000, 98000);
-            }
-            cLog = cLog.Replace("\0", string.Empty);
-        }
-
-        private void HandleData(int Port, byte[] Data)
-        {
-            try
-            {
-                if (Data.Length > 1)
-                {
-                    int PGN = Data[1] << 8 | Data[0];   // rc modules little endian
-                    AddToLog("< " + PGN.ToString());
-
-                    switch (PGN)
-                    {
-                        case 32400:
-                            foreach (clsProduct Prod in mf.Products.Items)
-                            {
-                                Prod.UDPcommFromArduino(Data, PGN);
-                            }
-                            break;
-
-                        case 32401:
-                            mf.AnalogData.ParseByteData(Data);
-                            break;
-
-                        case 32618:
-                            if (mf.SwitchBox.ParseByteData(Data))
-                            {
-                                SBtime = DateTime.Now;
-                                if(mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
-                            }
-                            break;
-
-                        case 33152: // AOG, 0x81, 0x80
-                            switch (Data[3])
-                            {
-                                case 228:
-                                    // vr data
-                                    mf.VRdata.ParseByteData(Data);
-                                    break;
-
-                                case 235:
-                                    // section widths
-                                    mf.SectionsPGN.ParseByteData(Data);
-                                    break;
-
-                                case 238:
-                                    // machine config
-                                    mf.MachineConfig.ParseByteData(Data);
-                                    break;
-
-                                case 239:
-                                    // machine data
-                                    mf.MachineData.ParseByteData(Data);
-                                    break;
-
-                                case 254:
-                                    // AutoSteer AGIO PGN
-                                    mf.AutoSteerPGN.ParseByteData(Data);
-                                    break;
-                            }
-                            break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("UDPcomm/HandleData " + ex.Message);
+                throw new Exception("UDPcomm/StartUDPServer: \n" + e.Message);
             }
         }
 
@@ -221,7 +126,7 @@ namespace RateController
 
                 int port = ((IPEndPoint)epSender).Port;
                 // Update status through a delegate
-                mf.Invoke(HandleDataDelegate, new object[] { port, localMsg });
+                ProcessData?.Invoke(port, localMsg);
             }
             catch (System.ObjectDisposedException)
             {
@@ -230,7 +135,7 @@ namespace RateController
             catch (Exception ex)
             {
                 //mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
-                mf.Tls.WriteErrorLog("UDPcomm/ReceiveData " + ex.Message);
+                throw new Exception("UDPcomm/ReceiveData " + ex.Message);
             }
         }
 
@@ -242,7 +147,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog(" UDP Send Data" + ex.ToString());
+                throw new Exception(" UDP Send Data" + ex.ToString());
             }
         }
 
@@ -256,7 +161,7 @@ namespace RateController
                 }
                 else
                 {
-                    string EP = mf.Tls.LoadProperty("EndPoint_" + cConnectionName);
+                    string EP = ManageFiles.LoadProperty("EndPoint_" + cConnectionName);
                     if (IPAddress.TryParse(EP, out _))
                     {
                         NetworkEP = EP;
@@ -269,7 +174,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/SetEP " + ex.Message);
+                throw new Exception("UDPcomm/SetEP " + ex.Message);
             }
         }
     }

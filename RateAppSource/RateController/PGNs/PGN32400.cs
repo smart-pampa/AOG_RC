@@ -1,4 +1,5 @@
 ﻿using System;
+using RateController.Domain;
 using RateController.PGNs;
 
 namespace RateController
@@ -47,7 +48,7 @@ namespace RateController
         private bool LastWifiConnected;
         private DateTime ReceiveTime;
 
-        public PGN32400(clsProduct CalledFrom)
+        public PGN32400(Product CalledFrom)
         {
             Prod = CalledFrom;
         }
