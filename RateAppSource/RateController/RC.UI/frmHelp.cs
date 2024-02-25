@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,11 +13,9 @@ namespace RateController
 {
     public partial class frmHelp : Form
     {
-        private FormStart mf;
 
-        public frmHelp(FormStart CallingForm, string Message, string Title = "Help", int timeInMsec = 30000)
+        public frmHelp(string Message, string Title = "Help", int timeInMsec = 30000)
         {
-            mf = CallingForm;
             InitializeComponent();
             this.Text = Title;
             label1.Text = Message;
@@ -51,7 +50,7 @@ namespace RateController
 
             if (this.WindowState == FormWindowState.Normal)
             {
-                mf.Tls.SaveFormData(this);
+                ManageFiles.SaveFormData(this);
             }
             Close();
         }
@@ -60,13 +59,13 @@ namespace RateController
         {
             try
             {
-                mf.Tls.LoadFormData(this);
+                ManageFiles.LoadFormData(this);
                 this.BackColor = Properties.Settings.Default.DayColour;
 
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmHelp/frmHelp_Load: " + ex.Message);
+                ManageFiles.WriteErrorLog("frmHelp/frmHelp_Load: " + ex.Message);
             }
         }
 
@@ -74,7 +73,7 @@ namespace RateController
         {
             if (this.WindowState == FormWindowState.Normal)
             {
-                mf.Tls.SaveFormData(this);
+                ManageFiles.SaveFormData(this);
             }
         }
 

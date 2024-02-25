@@ -2,6 +2,7 @@
 using RateController.PGNs;
 using RateController.Domain;
 using RateController.BLL;
+using System.Collections.Generic;
 
 namespace RateController.Services
 {
@@ -9,32 +10,70 @@ namespace RateController.Services
     {
         VirtualSwitchBox vSwitchBox = new VirtualSwitchBox();
 
-        public PGN32401 AnalogData;
-        public PGN254 AutoSteerPGN;
-        public PGN238 MachineConfig;
-        public PGN239 MachineData;
-        public PGN32700 ModuleConfig;
-        public PGN235 SectionsPGN;
-        public PGN32618 SwitchBox;
-        public PGN228 VRdata;
-        private PGN32501[] RelaySettings;
+        List<Product> lstProducs;
+        Machine oMachine;
+        Switch oSwitch;
+        List<Module> lstModules;
+
 
         public UDPComm UDPmodules;
         public UDPComm UDPaog;
+        public SerialComm[] SER;
 
         private string cLog;
 
-        public MessengerService() 
+        public MessengerService(List<Product> pLstProd, Machine pMachine, Switch pSwitch, List<Module> pLstMod) 
         {
-            SwitchBox = new PGN32618();
-            AnalogData = new PGN32401();
-            AutoSteerPGN = new PGN254();
-            SectionsPGN = new PGN235();
-            MachineConfig = new PGN238();
-            MachineData = new PGN239();
-            VRdata = new PGN228();
+            oMachine = pMachine;
+            oSwitch = pSwitch;
+            lstProducs = pLstProd;
+            lstModules = pLstMod;
+
+            ConnectUDP();
+            StartSerial();
+        }
+
+        public void SendSerial(byte[] Data)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                SER[i].SendData(Data);
+            }
+        }
+
+        public void StartSerial()
+        {
+            try
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    String ID = "_" + i.ToString() + "_";
+                    SER[i].RCportName = ManageFiles.LoadProperty("RCportName" + ID + i.ToString());
+
+                    int tmp;
+                    if (int.TryParse(ManageFiles.LoadProperty("RCportBaud" + ID + i.ToString()), out tmp))
+                    {
+                        SER[i].RCportBaud = tmp;
+                    }
+                    else
+                    {
+                        SER[i].RCportBaud = 38400;
+                    }
+
+                    bool tmp2;
+                    bool.TryParse(ManageFiles.LoadProperty("RCportSuccessful" + ID + i.ToString()), out tmp2);
+                    if (tmp2) SER[i].OpenRCport();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("FormRateControl/StartSerial: " + ex.Message);
+            }
+        }
 
 
+        public void ConnectUDP()
+        {
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 
             UDPaog = new UDPComm(17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
@@ -42,6 +81,19 @@ namespace RateController.Services
 
             UDPaog.ProcessData += HandleData;
             UDPmodules.ProcessData += HandleData;
+
+            // UDP
+            UDPmodules.StartUDPServer();
+            if (!UDPmodules.IsUDPSendConnected)
+            {
+                throw new Exception("UDPnetwork failed to start., 3000, true, true");
+            }
+
+            UDPaog.StartUDPServer();
+            if (!UDPaog.IsUDPSendConnected)
+            {
+                throw new Exception("UDPagio failed to start., 3000, true, true");
+            }
         }
 
         public void SendUDP(PGN msg)
@@ -59,60 +111,38 @@ namespace RateController.Services
             {
                 if (Data.Length > 1)
                 {
-                    ProductBLL oProdBLL = new ProductBLL();
-
                     int PGN = Data[1] << 8 | Data[0];   // rc modules little endian
                     AddToLog("< " + PGN.ToString());
 
                     switch (PGN)
                     {
                         case 32400:
-                            foreach (Product oProd in mf.Products.Items)
+                            foreach (Product oProd in lstProducs)
                             {
-                                oProdBLL.UDPcommFromArduino(oProd, Data, PGN);
+                                ProductBLL oProdBLL = new ProductBLL(oProd);
+                                oProdBLL.UDPcommFromArduino(Data, PGN);
                             }
                             break;
 
                         case 32401:
-                            AnalogData.ParseByteData(Data);
+                            //Module, analog info from module to RC
+                            byte cModuleID = Data[2];
+                            Module oMod = lstModules.Find(x => x.Id == cModuleID);
+                            oMod.AnalogData.ParseByteData(Data);
                             break;
 
                         case 32618:
-                            if (SwitchBox.ParseByteData(Data))
+                            // to Rate Controller from arduino switch box
+                            if (oSwitch.SwitchBox.ParseByteData(Data))
                             {
                                 //SBtime = DateTime.Now;
                                 if (vSwitchBox.Enabled) vSwitchBox.Enabled = false;
                             }
                             break;
 
-                        case 33152: // AOG, 0x81, 0x80
-                            switch (Data[3])
-                            {
-                                case 228:
-                                    // vr data
-                                    VRdata.ParseByteData(Data);
-                                    break;
-
-                                case 235:
-                                    // section widths
-                                    SectionsPGN.ParseByteData(Data);
-                                    break;
-
-                                case 238:
-                                    // machine config
-                                    MachineConfig.ParseByteData(Data);
-                                    break;
-
-                                case 239:
-                                    // machine data
-                                    MachineData.ParseByteData(Data);
-                                    break;
-
-                                case 254:
-                                    // AutoSteer AGIO PGN
-                                    AutoSteerPGN.ParseByteData(Data);
-                                    break;
-                            }
+                        case 33152: 
+                            // AOG, 0x81, 0x80
+                            oMachine.SetMessage(Data);
                             break;
                     }
                 }

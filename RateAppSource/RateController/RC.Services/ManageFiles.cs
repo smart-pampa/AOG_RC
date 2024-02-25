@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace RateController.Services
 {
@@ -133,6 +136,37 @@ namespace RateController.Services
             {
             }
         }
+
+        public static void LoadFormData(Form Frm)
+        {
+            int Leftloc = 0;
+            int.TryParse(LoadAppProperty(Frm.Name + ".Left"), out Leftloc);
+            Frm.Left = Leftloc;
+
+            int Toploc = 0;
+            int.TryParse(LoadAppProperty(Frm.Name + ".Top"), out Toploc);
+            Frm.Top = Toploc;
+
+            IsOnScreen(Frm, true);
+        }
+
+        public static bool IsOnScreen(Form form, bool PutOnScreen = false)
+        {
+            // Create rectangle
+            Rectangle formRectangle = new Rectangle(form.Left, form.Top, form.Width, form.Height);
+
+            // Test
+            bool IsOn = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
+
+            if (!IsOn & PutOnScreen)
+            {
+                form.Top = 0;
+                form.Left = 0;
+            }
+
+            return IsOn;
+        }
+
 
         public static void SaveProperty(string Key, string Value)
         {
@@ -307,6 +341,19 @@ namespace RateController.Services
                 WriteErrorLog("Tools: WriteActivityLog: " + ex.Message);
             }
         }
+
+        public static void SaveFormData(Form Frm)
+        {
+            try
+            {
+                SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
+                SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         private static void LoadAppData(string path)
         {
             // property:  key=value  ex: "LastFile=Main.mdb"

@@ -30,7 +30,7 @@ namespace RateController
         private const byte cByteCount = 19;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
-        private readonly clsProduct Prod;
+        private readonly Product Prod;
         private double cKD;
         private double cKI;
         private double cKP;
@@ -114,7 +114,7 @@ namespace RateController
             Data[17] = 0;
 
             // CRC
-            Data[18] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[18] = CRC(Data, cByteCount - 1);
 
             Prod.mf.SendSerial(Data);
             Prod.mf.UDPmodules.SendUDPMessage(Data);

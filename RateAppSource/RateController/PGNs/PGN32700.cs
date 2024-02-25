@@ -1,5 +1,6 @@
 ﻿using System;
 using RateController.PGNs;
+using RateController.Services;
 
 namespace RateController
 {
@@ -29,12 +30,9 @@ namespace RateController
         private const byte cByteCount = 31;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 188;
-        private byte[] cData = new byte[cByteCount];
-        private FormStart mf;
 
-        public PGN32700(FormStart Main)
+        public PGN32700()
         {
-            mf = Main;
             Load();
         }
 
@@ -113,7 +111,7 @@ namespace RateController
             for (int i = 2; i < cByteCount; i++)
             {
                 Name = "ModuleConfig_" + i.ToString();
-                if (byte.TryParse(mf.Tls.LoadProperty(Name), out byte Val))
+                if (byte.TryParse(ManageFiles.LoadProperty(Name), out byte Val))
                 {
                     cData[i] = Val;
                 }
@@ -134,14 +132,14 @@ namespace RateController
             for (int i = 2; i < cByteCount; i++)
             {
                 Name = "ModuleConfig_" + i.ToString();
-                mf.Tls.SaveProperty(Name, cData[i].ToString());
+                ManageFiles.SaveProperty(Name, cData[i].ToString());
             }
         }
 
         public void Send()
         {
             // CRC
-            cData[cByteCount - 1] = mf.Tls.CRC(cData, cByteCount - 1);
+            cData[cByteCount - 1] = CRC(cData, cByteCount - 1);
 
             // send
             mf.SendSerial(cData);

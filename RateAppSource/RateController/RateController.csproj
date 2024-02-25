@@ -100,28 +100,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\clsAlarm.cs" />
-    <Compile Include="Classes\clsCalibrate.cs" />
-    <Compile Include="Classes\clsCalibrates.cs" />
-    <Compile Include="Classes\clsPressure.cs" />
-    <Compile Include="Classes\clsPressures.cs" />
-    <Compile Include="Classes\clsProducts.cs" />
-    <Compile Include="Classes\clsRelay.cs" />
-    <Compile Include="Classes\clsRelays.cs" />
-    <Compile Include="Classes\clsSection.cs" />
-    <Compile Include="Classes\clsSectionControl.cs" />
-    <Compile Include="Classes\clsSections.cs" />
-    <Compile Include="Classes\clsTools.cs" />
-    <Compile Include="Classes\clsProduct.cs" />
-    <Compile Include="Classes\clsVirtualSwitchBox.cs" />
-    <Compile Include="Classes\clsZone.cs" />
-    <Compile Include="Classes\clsZones.cs" />
+    <Compile Include="RC.BLL\MachineBLL.cs" />
     <Compile Include="RC.BLL\ProductBLL.cs" />
+    <Compile Include="RC.Services\RCHelp.cs" />
     <Compile Include="RC.Services\SerialComm.cs" />
     <Compile Include="RC.Services\UDPcomm.cs" />
-    <Compile Include="Classes\VerticalProgressBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PGNs\PGN.cs" />
     <Compile Include="RC.BLL\ModuleBLL.cs" />
     <Compile Include="RC.BLL\RateControllerBLL.cs" />
@@ -136,121 +119,7 @@
     <Compile Include="RC.Domain\Section.cs" />
     <Compile Include="RC.Domain\Sensor.cs" />
     <Compile Include="RC.Domain\Switch.cs" />
-    <Compile Include="RC.Domain\Vehicle.cs" />
-    <Compile Include="FormNumeric.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormNumeric.Designer.cs">
-      <DependentUpon>FormNumeric.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormPIDGraph.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormPIDGraph.designer.cs">
-      <DependentUpon>FormPIDGraph.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormPressure.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormPressure.Designer.cs">
-      <DependentUpon>FormPressure.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormSettings.designer.cs">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormStart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormStart.designer.cs">
-      <DependentUpon>FormStart.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmCalHelp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmCalHelp.Designer.cs">
-      <DependentUpon>frmCalHelp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmCalibrate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmCalibrate.Designer.cs">
-      <DependentUpon>frmCalibrate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmComm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmComm.Designer.cs">
-      <DependentUpon>frmComm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmHelp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmHelp.Designer.cs">
-      <DependentUpon>frmHelp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmLargeScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLargeScreen.Designer.cs">
-      <DependentUpon>frmLargeScreen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmModule.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmModule.Designer.cs">
-      <DependentUpon>frmModule.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmModuleConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmModuleConfig.Designer.cs">
-      <DependentUpon>frmModuleConfig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmMsgBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMsgBox.Designer.cs">
-      <DependentUpon>frmMsgBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPins.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPins.Designer.cs">
-      <DependentUpon>frmPins.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPressureDisplay.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPressureDisplay.Designer.cs">
-      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPrimedStart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPrimedStart.Designer.cs">
-      <DependentUpon>frmPrimedStart.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmRelays.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmRelays.Designer.cs">
-      <DependentUpon>frmRelays.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSections.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSections.Designer.cs">
-      <DependentUpon>frmSections.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSwitches.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSwitches.Designer.cs">
-      <DependentUpon>frmSwitches.cs</DependentUpon>
-    </Compile>
+    <Compile Include="RC.Domain\Machine.cs" />
     <Compile Include="Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -303,7 +172,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RC.Services\ConfAPP.cs" />
-    <Compile Include="RC.Services\Files.cs" />
+    <Compile Include="RC.Services\ManageFiles.cs" />
     <Compile Include="RC.Services\MessengerService.cs" />
     <Compile Include="RC.UI\FormUIStart.cs">
       <SubType>Form</SubType>
@@ -311,72 +180,18 @@
     <Compile Include="RC.UI\FormUIStart.Designer.cs">
       <DependentUpon>FormUIStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="RC.UI\frmHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RC.UI\frmHelp.designer.cs">
+      <DependentUpon>frmHelp.cs</DependentUpon>
+    </Compile>
     <Compile Include="RCRestore.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FormNumeric.resx">
-      <DependentUpon>FormNumeric.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPIDGraph.resx">
-      <DependentUpon>FormPIDGraph.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPressure.resx">
-      <DependentUpon>FormPressure.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormStart.resx">
-      <DependentUpon>FormStart.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmCalHelp.resx">
-      <DependentUpon>frmCalHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmCalibrate.resx">
-      <DependentUpon>frmCalibrate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmComm.resx">
-      <DependentUpon>frmComm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmHelp.resx">
-      <DependentUpon>frmHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLargeScreen.resx">
-      <DependentUpon>frmLargeScreen.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmModule.resx">
-      <DependentUpon>frmModule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmModuleConfig.resx">
-      <DependentUpon>frmModuleConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMsgBox.resx">
-      <DependentUpon>frmMsgBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPins.resx">
-      <DependentUpon>frmPins.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPressureDisplay.resx">
-      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPrimedStart.resx">
-      <DependentUpon>frmPrimedStart.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmRelays.resx">
-      <DependentUpon>frmRelays.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSections.resx">
-      <DependentUpon>frmSections.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSwitches.resx">
-      <DependentUpon>frmSwitches.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
@@ -422,6 +237,9 @@
     </Compile>
     <EmbeddedResource Include="RC.UI\FormUIStart.resx">
       <DependentUpon>FormUIStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RC.UI\frmHelp.resx">
+      <DependentUpon>frmHelp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>

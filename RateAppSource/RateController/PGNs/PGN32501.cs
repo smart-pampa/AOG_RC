@@ -18,14 +18,11 @@ namespace RateController
         //9     CRC
 
         private const byte cByteCount = 10;
-        private byte[] cData = new byte[cByteCount];
         private int cModuleID;
         private DateTime cSendTime;
-        private FormStart mf;
 
-        public PGN32501(FormStart Main, int ModuleID)
+        public PGN32501(int ModuleID)
         {
-            mf = Main;
             cModuleID = ModuleID;
         }
 
@@ -54,7 +51,7 @@ namespace RateController
             cData[8] = (byte)(Inverted >> 8);
 
             // CRC
-            cData[cByteCount - 1] = mf.Tls.CRC(cData, cByteCount - 1);
+            cData[cByteCount - 1] = CRC(cData, cByteCount - 1);
 
             // send
             mf.SendSerial(cData);

@@ -29,9 +29,8 @@ namespace RateController
         //13    CRC
 
         private const byte cByteCount = 14;
-        private byte[] cData = new byte[cByteCount];
         private DateTime cSendTime;
-        private clsProduct Prod;
+        private Product Prod;
 
         public PGN32500(Product CalledFrom)
         {

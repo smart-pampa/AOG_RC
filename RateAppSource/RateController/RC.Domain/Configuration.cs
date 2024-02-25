@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RateController.Services;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Domain
 {
@@ -43,9 +40,7 @@ namespace RateController.Domain
                 }
             }
         }
-
-        public static bool cUseInches;
-        public static bool Restart = false;
+        public static bool UseInches = true;
         public static string WiFiIP;
 
         private static SimType cSimMode = SimType.VirtualNano;
@@ -55,6 +50,19 @@ namespace RateController.Domain
         public static string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgNone};
+
+        public static int DefaultProduct
+        {
+            get { return DefaultProduct; }
+            set
+            {
+                if (value >= 0 && value < MaxProducts - 2)
+                {
+                    DefaultProduct = value;
+                    ManageFiles.SaveProperty("DefaultProduct", DefaultProduct.ToString());
+                }
+            }
+        }
 
     }
 

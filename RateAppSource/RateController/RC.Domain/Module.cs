@@ -16,11 +16,16 @@ namespace RateController.Domain
         public List<Sensor> SensorList;
         public List<Section> SectionList;
 
+        public PGN32401 AnalogData;
+        public PGN32700 ModuleConfig;
+
         public Module() 
         { 
             RelayList = new List<Relay>();
             SensorList = new List<Sensor>();
             SectionList = new List<Section>();
+            AnalogData = new PGN32401();
         }
+
     }
 }

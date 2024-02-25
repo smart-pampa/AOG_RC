@@ -1,4 +1,5 @@
 ﻿using System;
+using RateController.BLL;
 using RateController.Domain;
 using RateController.PGNs;
 
@@ -31,7 +32,7 @@ namespace RateController
         private const byte cByteCount = 13;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 144;
-        private readonly clsProduct Prod;
+        private readonly Product Prod;
         private int cElapsedTime;
         private bool cEthernetConnected;
         private byte cLastStrength;
@@ -66,7 +67,7 @@ namespace RateController
                 LastModuleSending = ModuleSending();
                 Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Sending: " + ModuleSending().ToString();
 
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                //Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
             if (LastModuleReceiving != ModuleReceiving())
@@ -74,14 +75,14 @@ namespace RateController
                 LastModuleReceiving = ModuleReceiving();
                 Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
 
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                //Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
             if (LastEthernetConnected != cEthernetConnected)
             {
                 LastEthernetConnected = cEthernetConnected;
                 Mes = "Ethernet connected: " + cEthernetConnected.ToString();
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                //Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
             if (LastWifiConnected != cWifiConnected || cLastStrength != cWifiStrength)
@@ -89,7 +90,7 @@ namespace RateController
                 LastWifiConnected = cWifiConnected;
                 cLastStrength = cWifiStrength;
                 Mes = "Wifi connected: " + cWifiConnected.ToString() + "   Strength: " + cWifiStrength.ToString();
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                //Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
         }
 
@@ -109,7 +110,7 @@ namespace RateController
 
         public bool ModuleReceiving()
         {
-            if (Prod.mf.SimMode == SimType.VirtualNano)
+            if (Configuration.SimMode == SimType.VirtualNano)
             {
                 return true;
             }
@@ -121,7 +122,7 @@ namespace RateController
 
         public bool ModuleSending()
         {
-            if (Prod.mf.SimMode == SimType.VirtualNano)
+            if (Configuration.SimMode == SimType.VirtualNano)
             {
                 return true;
             }
@@ -136,12 +137,12 @@ namespace RateController
             bool Result = false;
 
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
-                Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
+                Data.Length >= cByteCount && GoodCRC(Data))
             {
-                int tmp = Prod.mf.Tls.ParseModID(Data[2]);
+                int tmp = ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
                 {
-                    tmp = Prod.mf.Tls.ParseSenID(Data[2]);
+                    tmp = ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
                         cElapsedTime = (int)(DateTime.Now - cLastTime).TotalMilliseconds;
@@ -211,18 +212,19 @@ namespace RateController
 
         private void CheckRate()
         {
+            ProductBLL oProdBLL = new ProductBLL(Prod);
             double Ratio;
             double Trate;
 
-            Trate = Prod.TargetUPM();
+            Trate = oProdBLL.TargetUPM();
             if (Trate > 0 && cUPM > 0)
             {
                 Ratio = Math.Abs((cUPM / Trate) - 1);
                 if (Ratio > 0.3)
                 {
-                    Prod.mf.Tls.WriteActivityLog("");
-                    Prod.mf.Tls.WriteActivityLog("Current rate: " + cUPM.ToString("N2") + ", Ave. rate: " + Trate.ToString("N2") + ", Ratio: " + Ratio.ToString("N2")
-                       + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
+                    //Prod.mf.Tls.WriteActivityLog("");
+                    //Prod.mf.Tls.WriteActivityLog("Current rate: " + cUPM.ToString("N2") + ", Ave. rate: " + Trate.ToString("N2") + ", Ratio: " + Ratio.ToString("N2")
+                    //   + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
                 }
             }
         }

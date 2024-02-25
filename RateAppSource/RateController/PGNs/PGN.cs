@@ -89,5 +89,17 @@ namespace RateController.PGNs
         {
             return (byte)(b | (1 << pos));
         }
+
+        public byte ParseModID(byte ID)
+        {
+            // top 4 bits
+            return (byte)(ID >> 4);
+        }
+
+        public byte ParseSenID(byte ID)
+        {
+            // bottom 4 bits
+            return (byte)(ID & 0b00001111);
+        }
     }
 }

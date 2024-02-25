@@ -8,7 +8,13 @@ namespace RateController.Domain
 {
     public class Switch
     {
+        public PGN32618 SwitchBox;
         public int Id { get; set; }
-        public Switch() { }
+        public Switch() 
+        {
+            SwitchBox = new PGN32618();
+        }
+
+
     }
 }

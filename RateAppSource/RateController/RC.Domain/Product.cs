@@ -9,9 +9,13 @@ namespace RateController.Domain
     public abstract class Product
     {
         public PGN32400 ArduinoModule;
-        public byte CoverageUnits = 0;
+        public PGN32502 ModulePIDdata;
         public PGN32500 ModuleRateSettings;
+        public byte CoverageUnits = 0;
         public double TankSize = 0;
+        public double UnitsOffset = 0;
+        public double UnitsApplied = 0;
+
         private bool cBumpButtons;
         private bool cCalRun;
         private bool cCalSetMeter;
@@ -30,7 +34,7 @@ namespace RateController.Domain
         private int cModID;
         private byte cOffRateSetting;
         private bool cOnScreen;
-        private double Coverage = 0;
+        private double cCoverage = 0;
         private double cProdDensity = 0;
         private int cProductID;
         protected string cProductName = "";
@@ -40,8 +44,8 @@ namespace RateController.Domain
         private int cSenID;
         private int cSerialPort;
         private double cTankStart = 0;
-        private double CurrentMinutes;
-        private double CurrentWorkedArea_Hc = 0;
+        public double CurrentMinutes;
+        public double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
         private bool cUseMultiPulse;
         private bool cUseOffRateAlarm;
@@ -50,13 +54,10 @@ namespace RateController.Domain
         private double cVRmax;
         private double cVRmin;
         private byte cWifiStrength;
-        private double LastAccQuantity = 0;
-        private DateTime LastUpdateTime;
-        private PGN32502 ModulePIDdata;
-        private bool PauseWork = false;
-        
-        public double UnitsOffset = 0;
-        public double UnitsApplied = 0;
+        public double LastAccQuantity = 0;
+        public DateTime LastUpdateTime;
+        public bool PauseWork = false;
+        public DateTime LastSave;
 
         public Product(int ProdID)
         {
@@ -304,6 +305,11 @@ namespace RateController.Domain
             }
         }
 
+        public double HectaresPerMinute
+        {
+            get { return cHectaresPerMinute; }
+            set { cHectaresPerMinute = value;}
+        }
         public double RateSet
         {
             get { return cRateSet; }
@@ -418,6 +424,22 @@ namespace RateController.Domain
 
         private string IDname
         { get { return cProductID.ToString(); } }
+
+        public bool ProductOn
+        {
+            get
+            {
+                return (ArduinoModule.Connected() && HectaresPerMinute > 0);
+            }
+        }
+
+        public double Coverage
+        {
+            get { return cCoverage; }
+            set { cCoverage = value; }
+        }
+
+        public abstract int ManualPWM { get; set; };
     }
 
     public class ComboCloseTimed : Product
@@ -427,7 +449,7 @@ namespace RateController.Domain
 
         }
 
-        public int ManualPWM
+        public override int ManualPWM
         {
             get { return cManualPWM; }
             set
@@ -445,8 +467,16 @@ namespace RateController.Domain
         {
             ProductName = "fan" + ProdID.ToString();
         }
+        
+        public new bool ProductOn
+        {
+            get
+            {
+              return ArduinoModule.Connected();
+            }
+        }
 
-        public int ManualPWM
+        public override int ManualPWM
         {
             get { return cManualPWM; }
             set
@@ -464,16 +494,43 @@ namespace RateController.Domain
         {
 
         }
-    }
 
-    public class Motor : Product
-    {
-        public Motor(int ProdID) : base(ProdID)
+        //TODO: Revisar si esta bien
+        public override int ManualPWM
         {
-
+            get { return cManualPWM; }
+            set
+            {
+                if (value < 0) cManualPWM = 0;
+                else if (value > 255) cManualPWM = 255;
+                else cManualPWM = (byte)value;
+            }
         }
 
-        public int ManualPWM
+    }
+
+    public class MotorWeights : Product
+    {
+        public MotorWeights(int ProdID) : base(ProdID) { }
+
+        //TODO: Revisar si esta bien
+        public override int ManualPWM
+        {
+            get { return cManualPWM; }
+            set
+            {
+                if (value < 0) cManualPWM = 0;
+                else if (value > 255) cManualPWM = 255;
+                else cManualPWM = (byte)value;
+            }
+        }
+
+    }
+    public class Motor : Product
+    {
+        public Motor(int ProdID) : base(ProdID) { }
+
+        public override int ManualPWM
         {
             get { return cManualPWM; }
             set
@@ -490,7 +547,7 @@ namespace RateController.Domain
         {
         }
 
-        public int ManualPWM
+        public override int ManualPWM
         {
             get { return cManualPWM; }
             set
@@ -509,7 +566,7 @@ namespace RateController.Domain
 
         }
 
-        public int ManualPWM
+        public override int ManualPWM
         {
             get { return cManualPWM; }
             set
