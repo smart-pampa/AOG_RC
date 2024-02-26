@@ -48,22 +48,20 @@ namespace RateController.Domain
 
         public void CheckAlarms()
         { 
-            RCalarm.CheckAlarms(....);
+            
         }
         public void LoadSettings()
         {
-            SetDayMode();
+            if (bool.TryParse(ManageFiles.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
+            if (bool.TryParse(ManageFiles.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
+            if (bool.TryParse(ManageFiles.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
+            if (bool.TryParse(ManageFiles.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
+            if (bool.TryParse(ManageFiles.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
+            if (byte.TryParse(ManageFiles.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
+            if (bool.TryParse(ManageFiles.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
+            if (bool.TryParse(ManageFiles.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
 
-            if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
-            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
-            if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-            if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
-            if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
-            if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
-            if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
-            if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
-
-            if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
+            if (int.TryParse(ManageFiles.LoadProperty("PrimeDelay"), out int PD))
             {
                 cPrimeDelay = PD;
             }
@@ -72,7 +70,7 @@ namespace RateController.Domain
                 cPrimeDelay = 3;
             }
 
-            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
+            if (double.TryParse(ManageFiles.LoadProperty("SimSpeed"), out double Spd))
             {
                 cSimSpeed = Spd;
             }
@@ -81,7 +79,7 @@ namespace RateController.Domain
                 cSimSpeed = 5;
             }
 
-            if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
+            if (double.TryParse(ManageFiles.LoadProperty("PrimeTime"), out double ptime))
             {
                 cPrimeTime = ptime;
             }
@@ -90,16 +88,24 @@ namespace RateController.Domain
                 cPrimeTime = 5;
             }
 
-            Sections.Load();
-            Sections.CheckSwitchDefinitions();
+            MachineBLL oMachineBLL = new MachineBLL(oMachine);
+            oMachineBLL.LoadSections();
 
-            Products.Load();
+            ProductList.Clear();
+            for (int i = 0; i < Configuration.MaxProducts; i++)
+            {
+                Product Prod = new Valve(i);
+                ProductList.Add(Prod);
+                ProductBLL oProductBLL = new ProductBLL(Prod);
+                oProductBLL.Load();
+            }
+
             PressureObjects.Load();
             RelayObjects.Load();
 
             LoadDefaultProduct();
-            Zones.Load();
-            SetTransparent(cUseTransparent);
+            //Zones.Load();
+            //SetTransparent(cUseTransparent);
         }
 
     }

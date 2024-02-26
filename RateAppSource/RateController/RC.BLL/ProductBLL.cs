@@ -239,7 +239,7 @@ namespace RateController.BLL
             return V;
         }
 
-        public double SmoothRate(Machine pMachine)
+        public double SmoothRate(Machine pMachine, Switch pSwitch)
         {
             double Result = 0;
             if (oProd.ProductOn) //TODO: FALTA VALIDAR QUE AUTOSTEER ESTE CONECTADO TAMBIEN
@@ -251,7 +251,7 @@ namespace RateController.BLL
                 {
                     double Rt = Ra / TargetRate(pMachine);
 
-                    if (Rt >= .9 && Rt <= 1.1 && mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                    if (Rt >= .9 && Rt <= 1.1 && pSwitch.SwitchBox.SwitchIsOn(SwIDs.Auto))
                     {
                         Result = TargetRate(pMachine);
                     }
@@ -360,7 +360,7 @@ namespace RateController.BLL
             ManageFiles.SaveProperty("RateAlt" + oProd.ID, oProd.RateAlt.ToString());
             ManageFiles.SaveProperty("FlowCal" + oProd.ID, oProd.MeterCal.ToString());
             ManageFiles.SaveProperty("TankSize" + oProd.ID, oProd.TankSize.ToString());
-            ManageFiles.SaveProperty("ValveType" + oProd.ID, Type(oProd);
+            ManageFiles.SaveProperty("ValveType" + oProd.ID, oProd.GetType().Name);
 
             ManageFiles.SaveProperty("ProductName" + oProd.ID, oProd.ProductName);
 
@@ -393,6 +393,37 @@ namespace RateController.BLL
             ManageFiles.SaveProperty("ConstantUPM" + oProd.ID, oProd.ConstantUPM.ToString());
         }
 
+        public void Load()
+        {
+            if (IsNew())
+            {
+                // set initial module ID
+                for (int j = 0; j < 255; j++)
+                {
+                    // TODO: Es necesario este check?
+                    // checks if product module ID/sensor ID pair are unique
+                    // public bool UniqueModSen(int ModID, int SenID, int ProdID)
+                    //if (UniqueModSen(j, oProd.SensorID, oProd.ID))
+                    {
+                        oProd.ModuleID = j;
+                        break;
+                    }
+                }
+                oProd.PIDkp = 1;
+                oProd.PIDki = 0;
+                oProd.PIDkd = 0;
+                oProd.PIDmax = 100;
+                oProd.PIDmin = 5;
+                oProd.ProductName = "P" + (oProd.ID + 1).ToString();
+                Save();
+            }
+        }
 
+        public bool IsNew()
+        {
+            bool Result = (oProd.PIDkd == 0 && oProd.PIDki == 0 && oProd.PIDkp == 0 && oProd.PIDmin == 0 && oProd.PIDmax == 0);
+            return Result;
+        }
     }
+}
 }

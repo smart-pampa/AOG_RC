@@ -57,6 +57,10 @@ namespace RateController.BLL
             return Result;        
         }
 
+        public void LoadSection() 
+        { 
+            
+        }
 
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RateController.Domain;
+﻿using RateController.Domain;
 
 namespace RateController.BLL
 {
@@ -81,6 +76,30 @@ namespace RateController.BLL
                 Result = (float)(WorkingWidth_cm / 100.0);    // meters
             }
             return Result;
+        }
+
+        public void LoadSections()
+        {
+            oMachine.SectionList.Clear();
+            for (int i = 0; i < Configuration.MaxSections; i++)
+            {
+                Section Sec = new Section(i);
+                SectionBLL oSectionBLL = new SectionBLL(Sec);
+                oSectionBLL.Load();
+                oMachine.SectionList.Add(Sec);
+            }
+            
+            CheckSwitchDefinitions();
+
+        }
+
+        public void CheckSwitchDefinitions()
+        {
+            foreach (Section Section in oMachine.SectionList) 
+            {
+                SectionBLL oSectionBLL = new SectionBLL(Section);
+                oSectionBLL.CheckSwitchDefinitions();
+            }
         }
     }
 }

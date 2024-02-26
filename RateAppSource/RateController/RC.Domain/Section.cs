@@ -9,7 +9,7 @@ namespace RateController.Domain
     public class Section
     {
         private int cID = 0;
-        private string Name;
+        public string Name;
         private float cWidth = 0;   // cm
 
         private bool cEdited;

@@ -439,7 +439,7 @@ namespace RateController.Domain
             set { cCoverage = value; }
         }
 
-        public abstract int ManualPWM { get; set; };
+        public abstract int ManualPWM { get; set; }
     }
 
     public class ComboCloseTimed : Product

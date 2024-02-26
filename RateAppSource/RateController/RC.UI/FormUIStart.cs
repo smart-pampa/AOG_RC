@@ -97,6 +97,7 @@ namespace RateController.RC.UI
 
                 appRC = new AppRC();
                 appRC.LoadSettings();
+                SetDayMode();
 
                 UpdateStatus();
 
@@ -185,7 +186,7 @@ namespace RateController.RC.UI
 
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = ProdBLL.TargetRate(appRC.oMachine).ToString("N0");
-                    lbCurrentRPM.Text = ProdBLL.SmoothRate(appRC.oMachine).ToString("N0");
+                    lbCurrentRPM.Text = ProdBLL.SmoothRate(appRC.oMachine, appRC.oSwitch).ToString("N0");
                     lbOn.Visible = Prd.FanOn;
                     lbOff.Visible = !Prd.FanOn;
 
@@ -242,7 +243,7 @@ namespace RateController.RC.UI
 
                         default:
                             lbRate.Text = Lang.lgCurrentRate;
-                            lbRateAmount.Text = ProdBLL.SmoothRate(appRC.oMachine).ToString("N1");
+                            lbRateAmount.Text = ProdBLL.SmoothRate(appRC.oMachine, appRC.oSwitch).ToString("N1");
                             break;
                     }
 
@@ -301,7 +302,7 @@ namespace RateController.RC.UI
                 }
 
                 // fan button
-                if (CurrentPage > 0 && Products.Item(CurrentPage - 1).FanOn)
+                if (CurrentPage > 0 && appRC.ProductList[CurrentPage - 1].FanOn)
                 {
                     btnFan.Image = Properties.Resources.FanOn;
                 }
@@ -649,7 +650,8 @@ namespace RateController.RC.UI
                 if (saveFileDialog1.FileName != "")
                 {
                     ManageFiles.SaveFile(saveFileDialog1.FileName);
-                    LoadSettings();
+                    appRC.LoadSettings();
+                    SetDayMode();
                 }
             }
         }
@@ -681,7 +683,8 @@ namespace RateController.RC.UI
             {
                 Tls.PropertiesFile = openFileDialog1.FileName;
                 Products.Load();
-                LoadSettings();
+                appRC.LoadSettings();
+                SetDayMode();
             }
         }
 
@@ -743,7 +746,8 @@ namespace RateController.RC.UI
                 if (saveFileDialog1.FileName != "")
                 {
                     ManageFiles.OpenFile(saveFileDialog1.FileName);
-                    LoadSettings();
+                    appRC.LoadSettings();
+                    SetDayMode();
                 }
             }
         }
@@ -1032,8 +1036,6 @@ namespace RateController.RC.UI
             Lscrn.SetTransparent(UseTransparent);
             Lscrn.Show();
         }
-
-
     }
 }
 
